@@ -1,0 +1,40 @@
+#name
+name: "1 - Build e Auto PR into Develop"
+
+#event
+on:
+  push:
+    branches:
+      - "feature/**"
+
+#jobs
+jobs:
+  build:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Build app
+        run: echo Build da aplicação
+  
+  test:
+    needs: build
+    runs-on: ubuntu-latest    
+    steps:      
+      - name: Teste E2E app
+        run: echo Testes E2E da aplicação
+  
+  create-auto-pull-request:    
+    needs: test
+    runs-on: ubuntu-latest    
+    steps:      
+      - name: Open PR
+        id: open_pr
+        uses: rematocorp/open-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          from-branch: feature/github-action
+          to-branch: develop
+          repository-owner: ${{ github.repository_owner }}
+          repository: ${{ github.event.repository.name }}
+          
+      - name: Número do PR criado
+        run: echo PR de número ${{ steps.open_pr.outputs.pull_number }} criado
