@@ -1,0 +1,35 @@
+#name
+name: "3 - Deploy Hom e Auto PR into Main"
+
+#event
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - release
+
+#jobs
+jobs:  
+  deploy-hom:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Deploy Hom
+        run: echo "Deploy em homologação"
+
+  create-auto-pull-request:    
+    needs: deploy-hom
+    runs-on: ubuntu-latest    
+    steps:      
+      - name: Open PR
+        id: open_pr
+        uses: rematocorp/open-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          from-branch: ${{ github.ref_name }}
+          to-branch: main
+          repository-owner: ${{ github.repository_owner }}
+          repository: ${{ github.event.repository.name }}
+          
+      - name: Número do PR criado
+        run: echo PR de número ${{ steps.open_pr.outputs.pull_number }} criado
