@@ -1,0 +1,36 @@
+#name
+name: "2 - Deploy Dev e Auto PR into Develop"
+
+#event
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - "develop"
+
+#jobs
+jobs:  
+  deploy-dev:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest    
+    steps:      
+      - name: Deploy Dev
+        run: echo "Deploy em desenvolvimento"
+
+  create-auto-pull-request:    
+    needs: deploy-dev
+    runs-on: ubuntu-latest    
+    steps:      
+      - name: Open PR
+        id: open_pr
+        uses: rematocorp/open-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          from-branch: ${{ github.ref_name }}
+          to-branch: release
+          repository-owner: ${{ github.repository_owner }}
+          repository: ${{ github.event.repository.name }}
+          
+      - name: Número do PR criado
+        run: echo PR de número ${{ steps.open_pr.outputs.pull_number }} criado
