@@ -16,6 +16,6 @@ jobs:
         run: echo Rodando o primeiro Step do Job
       
       - name: Delay de 60 segundos
-        uses: jakejarvis/wait-action@master
+        uses: jakejarvis/wait-action@erro #gerando um erro
         with:
           time: '60s'
