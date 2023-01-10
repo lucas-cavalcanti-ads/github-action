@@ -31,7 +31,7 @@ jobs:
         uses: rematocorp/open-pull-request-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          from-branch: ${{ github.ref_name }}
+          from-branch: feature/github-action
           to-branch: develop
           repository-owner: ${{ github.repository_owner }}
           repository: ${{ github.event.repository.name }}
